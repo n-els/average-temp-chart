@@ -1,8 +1,8 @@
-const xlabels = [];
-const yvalues = [];
-
 
 async function getData() {
+
+    const years = [];
+    const temperatures = [];
 
     const response = await fetch("zonetemp.csv");
     const data = await response.text();
@@ -11,24 +11,26 @@ async function getData() {
     table.forEach(row => {
         const column = row.split(",");
         const year = column[0];
-        xlabels.push(year);
+        years.push(year);
         const temp = column[1];
-        yvalues.push(parseFloat(temp) + 14);
+        temperatures.push(parseFloat(temp) + 14);
     })
+
+    return {years, temperatures}
 
 }
 
 
 async function renderChart() {
-    await getData();
+    const data = await getData();
     const ctx = document.getElementById('myChart').getContext('2d');
 const myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: xlabels,
+        labels: data.years,
         datasets: [{
-            label: 'Durschnittliche Temperatur der Erde',
-            data: yvalues,
+            label: 'Durschnittliche Temperatur der Erde in °C',
+            data: data.temperatures,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -38,18 +40,28 @@ const myChart = new Chart(ctx, {
                 'rgba(255, 159, 64, 0.2)'
             ],
             borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
+                'rgba(255, 99, 132, 1)'
+                
             ],
-            borderWidth: 1,
-            // fill: true
+            borderWidth: 2,
         
         },]
-    }
+    },
+    options: {
+        scales: {
+            y: {
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, ticks) {
+                        return value + " °C";
+                    }
+                }
+            }
+        },
+        
+
+    },
+    
 });
 }
 

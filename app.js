@@ -2,7 +2,10 @@
 async function getData() {
 
     const years = [];
-    const temperatures = [];
+    const globalTemperatures = [];
+    const nhTemperatures = [];
+    const shTemperatures = [];
+    
 
     const response = await fetch("zonetemp.csv");
     const data = await response.text();
@@ -13,10 +16,15 @@ async function getData() {
         const year = column[0];
         years.push(year);
         const temp = column[1];
-        temperatures.push(parseFloat(temp) + 14);
-    })
+        globalTemperatures.push(parseFloat(temp) + 14);
+        const tempNH = column[2];
+        nhTemperatures.push(parseFloat(tempNH) + 14);
+        const tempSH = column[3];
+        shTemperatures.push(parseFloat(tempSH) + 14);
 
-    return {years, temperatures}
+    })
+    
+    return {years, globalTemperatures, nhTemperatures, shTemperatures}
 
 }
 
@@ -30,22 +38,43 @@ const myChart = new Chart(ctx, {
         labels: data.years,
         datasets: [{
             label: 'Durschnittliche Temperatur der Erde in °C',
-            data: data.temperatures,
+            data: data.globalTemperatures,
             backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
+                'rgba(255, 99, 132, 0.5)'
             ],
             borderColor: [
-                'rgba(255, 99, 132, 1)'
+                'rgba(255, 99, 132, 0.8)'
                 
             ],
             borderWidth: 2,
         
-        },]
+        },
+        {
+            label: 'Durschnittliche Temperatur der Nordhalbkugel in °C',
+            data: data.nhTemperatures,
+            backgroundColor: [
+                'rgba(39, 106, 245, 1)'
+            ],
+            borderColor: [
+                'rgba(39, 106, 245, 0.8)'
+                
+            ],
+            borderWidth: 2,
+        
+        },
+        {
+            label: 'Durschnittliche Temperatur der Südhalbkugel in °C',
+            data: data.shTemperatures,
+            backgroundColor: [
+                'rgba(245, 178, 39, 1)'
+            ],
+            borderColor: [
+                'rgba(245, 178, 39, 0.8)'
+                
+            ],
+            borderWidth: 2,
+        
+        }]
     },
     options: {
         scales: {

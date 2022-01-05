@@ -77,16 +77,27 @@ const myChart = new Chart(ctx, {
         }]
     },
     options: {
+        plugins: {
+            title: {
+                display: true,
+                text: 'Globale Erderwärmung'
+            },
+            subtitle: {
+                display: true,
+                text: 'Unregelmäßigkeiten der kombinierten Landluft- und Meeresoberflächentemperatur'
+            }
+        },
         scales: {
             y: {
                 ticks: {
-                    // Include a dollar sign in the ticks
                     callback: function(value, index, ticks) {
                         return value + " °C";
                     }
                 }
             }
         },
+        
+        
         
 
     },
